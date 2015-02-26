@@ -12,6 +12,8 @@ public class MoveSet {
 	Board myBoard;
 	Board givenBoard;//This one is not altered, this is how the board was presented by the parent.
 	
+	MoveSet child = null;//The moveSet that comes after this one in the game. This value is kept null if this is the last move in the game.
+	
 	public void resetMyBoard(){//Resets your board to the one given by the parent. Reset, move, reset, move, etc. 
 		myBoard = new Board(givenBoard);
 	}
