@@ -5,6 +5,13 @@ public class Board {
 	int[] spaces;//All the holes in the board, including the home squares
 	public static int stoneCount = 3;
 	
+	public boolean gameOver = false;//Whether or not the game has ended.
+	
+	public int maximumLegalDepth = -1;//How far through the move chain you can go without getting an error or ending your turn.
+	//This is where the move should be incremented. If the current move at depth X is not legal but there is a legal move at depth X,
+	//Then this value will be set to X. This defaults to -1 because it is increased in a do-while loop.
+	
+	public int nextValidPosition = -1;//The position of the next valid move. This is to allow proper and efficient move incrementation.
 	
 	
 	
@@ -12,11 +19,24 @@ public class Board {
 		//This function plays out all of a player's moves on a particular turn.
 		
 		int movePosition = -1;//Start this at -1 since you increment it each time.
+		maximumLegalDepth = -1;
 		
+		//TODO somewhere in here alter the maximumLegalDepth and the nextValidPosition to allow for good incrementation.
 		do{
 			movePosition++;
+
 			
-			if(  !(canMakeMove(player, moves[movePosition])) ){//If the move is not a legal one
+			//A for loop here should decide where the next possible move should be set.
+			for( int i = moves[movePosition] + 1; i != 6 && i != 13; i++){//If there is a valid move 
+				if(spaces[i] != 0){
+					nextValidPosition = i;
+					maximumLegalDepth = movePosition;
+				}
+			}
+			
+			if(  canMakeMove(player, moves[movePosition]) == false ){//If the move is not a legal one
+				
+				
 				
 				return false;
 				
@@ -91,6 +111,30 @@ public class Board {
 		
 	}
 	
+	public void dump(){//If either side of the board is empty, put all pieces into their respective goal squares and end the game.
+		
+		int count1 = 0;
+		int count2 = 0;
+		
+		for(int i = 0; i<6; i++){
+			count1 += spaces[i];
+		}
+		for(int i = 7; i<14; i++){
+			count2 += spaces[i];
+		}
+		
+		if(count1 == 0 || count2 == 0){//If this is true, the game is now over.
+			
+			gameOver = true;
+			
+			spaces[6] += count1;//Add the stones in each row to their respective goals.
+			spaces[13] += count2;
+			
+			
+			
+		}
+		
+	}
 	
 	public int getPlayer1Score(){
 		
@@ -101,8 +145,19 @@ public class Board {
 	public int getPlayer2Score(){
 		return spaces[13];
 	}
-	
-	
+
+	public boolean isGameOver() {
+		return gameOver;
+	}
+
+	public int getMaximumLegalDepth() {
+		return maximumLegalDepth;
+	}
+
+	public int getNextValidPosition() {
+		return nextValidPosition;
+	}
+
 	public Board(){//Main constructor, doesn't use any parameters AFAIK
 		
 		spaces = new int[14];
