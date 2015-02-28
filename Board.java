@@ -83,10 +83,14 @@ public class Board {
 		
 		do{
 			hand = spaces[currentLocation];//Copy the number of stones in that space into your hand
-			spaces[space] = 0;//Remove the stones from that location
+			spaces[currentLocation] = 0;//Remove the stones from that location
 		
 			while(hand > 0){
 				currentLocation++;
+				
+				if(currentLocation >= spaces.length){
+					currentLocation = 0;//Set it to -1 since it will be incremented to 1 by currentLocation++
+				}
 				
 				if( !(player == 1 && currentLocation == 13) && !(player == 2 && currentLocation == 6)){//If you aren't dropping into the opponent's space
 					
@@ -94,7 +98,11 @@ public class Board {
 					hand -= 1;
 					spaces[currentLocation] += 1;
 					
+					
+					
 				}
+				
+				
 			}
 		
 		
@@ -124,7 +132,7 @@ public class Board {
 		}
 		
 		if(count1 == 0 || count2 == 0){//If this is true, the game is now over.
-			
+			System.out.println("GameOver");
 			gameOver = true;
 			
 			spaces[6] += count1;//Add the stones in each row to their respective goals.
@@ -167,12 +175,19 @@ public class Board {
 		}
 		
 		spaces[0] = 0;
-		spaces[spaces.length] = 0;//Set the two goal squares to zero.
+		spaces[spaces.length-1] = 0;//Set the two goal squares to zero.
 		
 	}
 	
 	public Board(Board input){//Copy constructor
-		System.arraycopy(input.spaces, 0, this.spaces, 0, input.spaces.length);//Copy the input array into my array
+		
+		spaces = new int[14];
+		
+		for(int i = 0; i<input.spaces.length; i++){
+			this.spaces[i]=input.spaces[i];
+		}
+		
+		//System.arraycopy(input.spaces, 0, this.spaces, 0, input.spaces.length);//Copy the input array into my array
 	}
 	
 	

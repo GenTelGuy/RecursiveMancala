@@ -39,7 +39,20 @@ public class MoveSet {
 				//regardless of whether you got a recursive score or an "end-game" score:
 				bestTest();
 				
+				
+				
 			}
+			
+			//whether it was a valid move or not, increment to the next valid one.
+			
+			int position = -1;
+			if(myBoard.getNextValidPosition() > 5){
+				position = myBoard.getNextValidPosition() - 7;//Subtract 7 to translate it into player 2 terms.
+			}
+			else{
+				position = myBoard.getNextValidPosition();//It is in player 1's domain.
+			}
+			setMove( myBoard.getMaximumLegalDepth(), position);//Should reset the moves to the next possible valid move.
 			
 			
 		}
@@ -53,13 +66,16 @@ public class MoveSet {
 		if(score > bestScore){
 			bestScore = score;//Update bestScore
 			System.out.println("NewBest");
-			System.arraycopy(moves, 0, bestMoves, 0, moves.length);//Copy the moves array into bestMoves array
+			//System.arraycopy(moves, 0, bestMoves, 0, moves.length);//Copy the moves array into bestMoves array
+			for(int i = 0; i < moves.length; i++){
+				bestMoves[i] = moves[i];
+			}
 		}
 	}
 	
 	public void setMove( int position, int value){//Sets one move to a certain value, then resets all of the ones after that to the default value.
 		
-		moves[position] = value;
+		moves[position] = value;//TODO this part of the program is getting negative values, needs a fix.
 		for(int i = position+1; i<moves.length; i++){
 			moves[i] = defaultValue;
 		}
@@ -74,9 +90,11 @@ public class MoveSet {
 	public MoveSet(Board inputBoard, int player){
 		
 		this.moves = new int[255];
+		this.bestMoves = new int[255];
 		
 		for(int i = 0; i < moves.length; i++){
 			this.moves[i] = defaultValue;//TODO this default value should be either -1 or 0, I am not sure which as of now.
+			this.bestMoves[i] = defaultValue;
 		}
 		
 		givenBoard = new Board(inputBoard);
