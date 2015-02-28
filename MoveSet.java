@@ -52,8 +52,14 @@ public class MoveSet {
 			else{
 				position = myBoard.getNextValidPosition();//It is in player 1's domain.
 			}
-			setMove( myBoard.getMaximumLegalDepth(), position);//Should reset the moves to the next possible valid move.
 			
+			if(position==-1){
+				exhausted = true;
+			}
+			
+			else{
+			setMove( myBoard.getMaximumLegalDepth(), position);//Should reset the moves to the next possible valid move.
+			}
 			
 		}
 
@@ -65,7 +71,7 @@ public class MoveSet {
 	public void bestTest(){//Tests whether the current moveset's score is better or worse than the best score, if it is better then it replaces bestMoves with Moves
 		if(score > bestScore){
 			bestScore = score;//Update bestScore
-			System.out.println("NewBest");
+			System.out.println("NewBest" + bestScore);
 			//System.arraycopy(moves, 0, bestMoves, 0, moves.length);//Copy the moves array into bestMoves array
 			for(int i = 0; i < moves.length; i++){
 				bestMoves[i] = moves[i];
