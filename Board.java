@@ -1,4 +1,4 @@
-package SourceFiles;
+package RecursiveMancala;
 
 public class Board {
 
@@ -27,22 +27,25 @@ public class Board {
 
 			
 			//A for loop here should decide where the next possible move should be set.
-			for( int i = moves[movePosition] + 1; i != 6 && i != 13; i++){//If there is a valid move 
+			for( int i = moves[movePosition] + (player == 1 ? 0 : 7 ) + 1; i != 6 && i != 13; i++){//If there is a valid move. The ?: statement is necessary to adjust for different sides of the board. 
 				if(spaces[i] != 0){
 					nextValidPosition = i;
 					maximumLegalDepth = movePosition;
 				}
 			}
 			
-			if(  canMakeMove(player, moves[movePosition]) == false ){//If the move is not a legal one
+			dump();
+			
+			if(  canMakeMove(player, moves[movePosition]) == false && gameOver == false ){//If the move is not a legal one
 				
 				
+				System.out.println("Failed Turn");
 				
 				return false;
 				
 			}
 			
-		}while( makeMove(player, moves[movePosition]) );//Keep going until you can't go again
+		}while( makeMove(player, moves[movePosition]) && gameOver == false );//Keep going until you can't go again
 		
 		
 		return true;//If you haven't made an illegal move, then return true;].
@@ -81,9 +84,12 @@ public class Board {
 		}
 		
 		
+		
 		do{
-			hand = spaces[currentLocation];//Copy the number of stones in that space into your hand
-			spaces[currentLocation] = 0;//Remove the stones from that location
+			if( currentLocation != 6 && currentLocation != 13){
+				hand = spaces[currentLocation];//Copy the number of stones in that space into your hand
+				spaces[currentLocation] = 0;//Remove the stones from that location
+			}
 		
 			while(hand > 0){
 				currentLocation++;
@@ -104,9 +110,15 @@ public class Board {
 				
 				
 			}
+			
+			if(player == 1 && currentLocation == 6 || player == 2 && currentLocation == 13){//Added this a second time to avoid the program sticking.
+				return true;
+			}
 		
 		
 		}while(spaces[currentLocation] != 1);//Keep moving until you place your last stone into an empty pit.
+		
+		dump();
 		
 		if( player == 1 && currentLocation == 6 || player == 2 && currentLocation == 13){//If your last drop was into you home space
 			return true;//You can go again
@@ -116,6 +128,7 @@ public class Board {
 		else{
 			return false;//You can't go again
 		}
+		
 		
 	}
 	
@@ -165,6 +178,13 @@ public class Board {
 	public int getNextValidPosition() {
 		return nextValidPosition;
 	}
+	
+	public void printBoard(){
+		for(int i = 0; i<spaces.length; i++){
+			System.out.print( spaces[i] + ", " );
+		}
+		System.out.println();
+	}
 
 	public Board(){//Main constructor, doesn't use any parameters AFAIK
 		
@@ -174,7 +194,7 @@ public class Board {
 			spaces[i] = stoneCount;
 		}
 		
-		spaces[0] = 0;
+		spaces[6] = 0;
 		spaces[spaces.length-1] = 0;//Set the two goal squares to zero.
 		
 	}

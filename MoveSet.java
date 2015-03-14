@@ -1,6 +1,8 @@
-package SourceFiles;
+package RecursiveMancala;
 
 public class MoveSet {
+	
+	int level_ID;
 	
 	int defaultValue = 0;//The default value for a move, this could be coded as a 0 or as a -1
 	
@@ -26,12 +28,15 @@ public class MoveSet {
 			myBoard = new Board(givenBoard);//Reset the board.
 			if(myBoard.playTurn(player, moves) == true){//If that move was a valid move
 				
+				//System.out.println("Valid");
+				
 				if(myBoard.isGameOver() == true){//If this move ends the game
 					score = (player==1 ? myBoard.getPlayer1Score() : myBoard.getPlayer2Score());
 				}
 				
 				else{
-					child = new MoveSet(myBoard, (player==1 ? 1 : 2));//Create the next move in the chain
+					System.out.println("LowerLevel");
+					child = new MoveSet(myBoard, (player==1 ? 2 : 1), level_ID + 1);//Create the next move in the chain
 					child.findBestMove();
 					score = Board.stoneCount * 6 - child.getBestScore();//Your score is the points the child didn't earn.
 				}
@@ -58,7 +63,12 @@ public class MoveSet {
 			}
 			
 			else{
+			System.out.print("Before: ");
+			printMoves();
 			setMove( myBoard.getMaximumLegalDepth(), position);//Should reset the moves to the next possible valid move.
+			System.out.print("After: ");
+			printMoves();
+			
 			}
 			
 		}
@@ -71,7 +81,7 @@ public class MoveSet {
 	public void bestTest(){//Tests whether the current moveset's score is better or worse than the best score, if it is better then it replaces bestMoves with Moves
 		if(score > bestScore){
 			bestScore = score;//Update bestScore
-			System.out.println("NewBest" + bestScore);
+			//System.out.println("NewBest" + bestScore);
 			//System.arraycopy(moves, 0, bestMoves, 0, moves.length);//Copy the moves array into bestMoves array
 			for(int i = 0; i < moves.length; i++){
 				bestMoves[i] = moves[i];
@@ -92,9 +102,18 @@ public class MoveSet {
 		myBoard = new Board(givenBoard);
 	}
 	
-	
-	public MoveSet(Board inputBoard, int player){
+	public void printMoves(){
+		for(int i = 0; i<15; i++){
+			System.out.print( moves[i] + ", " );
+		}
 		
+		System.out.println();
+	}
+	
+	
+	public MoveSet(Board inputBoard, int player, int level_ID){
+		
+		this.level_ID = level_ID;
 		this.moves = new int[255];
 		this.bestMoves = new int[255];
 		
@@ -106,8 +125,11 @@ public class MoveSet {
 		givenBoard = new Board(inputBoard);
 		
 		this.player = player;
-		
-		
+		System.out.println("----------------------------------");
+		System.out.println(level_ID);
+		System.out.println(player);
+		givenBoard.printBoard();
+		System.out.println("----------------------------------");
 		
 	}
 
