@@ -35,10 +35,11 @@ public class MoveSet {
 				}
 				
 				else{
-					System.out.println("LowerLevel");
+					//System.out.println("LowerLevel");
 					child = new MoveSet(myBoard, (player==1 ? 2 : 1), level_ID + 1);//Create the next move in the chain
 					child.findBestMove();
-					score = Board.stoneCount * 6 - child.getBestScore();//Your score is the points the child didn't earn.
+					score = Board.stoneCount * 12 - child.getBestScore();//Your score is the points the child didn't earn.
+					//System.out.println("Player: " + player + " Level: " + level_ID + " Score: " + score);
 				}
 				
 				//regardless of whether you got a recursive score or an "end-game" score:
@@ -63,18 +64,20 @@ public class MoveSet {
 			}
 			
 			else{
-			System.out.print("Before: ");
-			printMoves();
+			//System.out.print("Before: ");
+			//printMoves();
 			setMove( myBoard.getMaximumLegalDepth(), position);//Should reset the moves to the next possible valid move.
-			System.out.print("After: ");
-			printMoves();
+			//System.out.print("After: ");
+			//printMoves();
 			
 			}
 			
 		}
 
 		
-		
+		if(level_ID<=3){
+			System.out.println("Level: " + level_ID + " Player " + player + " Best: " + bestScore);
+		}
 		
 	}
 	
@@ -91,10 +94,17 @@ public class MoveSet {
 	
 	public void setMove( int position, int value){//Sets one move to a certain value, then resets all of the ones after that to the default value.
 		
+		
+		
 		moves[position] = value;//TODO this part of the program is getting negative values, needs a fix.
 		for(int i = position+1; i<moves.length; i++){
 			moves[i] = defaultValue;
 		}
+		
+		/*if(level_ID  <= 7 ){
+			System.out.print(level_ID + ": ");
+			printMoves();
+		}*/
 		
 	}
 	
@@ -114,8 +124,8 @@ public class MoveSet {
 	public MoveSet(Board inputBoard, int player, int level_ID){
 		
 		this.level_ID = level_ID;
-		this.moves = new int[255];
-		this.bestMoves = new int[255];
+		this.moves = new int[64];
+		this.bestMoves = new int[64];
 		
 		for(int i = 0; i < moves.length; i++){
 			this.moves[i] = defaultValue;//TODO this default value should be either -1 or 0, I am not sure which as of now.
@@ -125,11 +135,11 @@ public class MoveSet {
 		givenBoard = new Board(inputBoard);
 		
 		this.player = player;
-		System.out.println("----------------------------------");
+		/*System.out.println("----------------------------------");
 		System.out.println(level_ID);
 		System.out.println(player);
 		givenBoard.printBoard();
-		System.out.println("----------------------------------");
+		System.out.println("----------------------------------");*/
 		
 	}
 

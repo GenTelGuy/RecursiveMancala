@@ -39,7 +39,7 @@ public class Board {
 			if(  canMakeMove(player, moves[movePosition]) == false && gameOver == false ){//If the move is not a legal one
 				
 				
-				System.out.println("Failed Turn");
+				//System.out.println("Failed Turn");
 				
 				return false;
 				
@@ -69,6 +69,9 @@ public class Board {
 	}
 	
 	public boolean makeMove( int player, int space){//returns whether or not that move allows you to go again.
+		
+		
+		
 		if( space < 0 || space > 5){//The move is out of the legal range
 			System.out.println("ERROR: Move outside of legal range.");
 			
@@ -116,7 +119,7 @@ public class Board {
 			}
 		
 		
-		}while(spaces[currentLocation] != 1);//Keep moving until you place your last stone into an empty pit.
+		}while(spaces[currentLocation] > 1);//Keep moving until you place your last stone into an empty pit.
 		
 		dump();
 		
@@ -140,16 +143,24 @@ public class Board {
 		for(int i = 0; i<6; i++){
 			count1 += spaces[i];
 		}
-		for(int i = 7; i<14; i++){
+		for(int i = 7; i<13; i++){
 			count2 += spaces[i];
 		}
 		
 		if(count1 == 0 || count2 == 0){//If this is true, the game is now over.
-			System.out.println("GameOver");
+			//System.out.println("GameOver: " + spaces[6] + " " + spaces[13]);
 			gameOver = true;
 			
 			spaces[6] += count1;//Add the stones in each row to their respective goals.
 			spaces[13] += count2;
+			
+			for(int i = 0; i<6; i++){
+				spaces[i] = 0;
+			}
+			for(int i = 7; i<13; i++){
+				spaces[i] = 0;
+			}
+			
 			
 			
 			
